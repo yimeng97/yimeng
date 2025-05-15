@@ -3,25 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>梦境收集站</title>
-    <link rel="stylesheet" href="style.css">
+    <title>梦想收藏家</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #e6e0f8, #c9e4ff);
+            font-family: "Helvetica Neue", sans-serif;
+            text-align: center;
+            color: #3e3e5c;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            margin-top: 2em;
+            color: #7b5ea7;
+        }
+        button {
+            background-color: #7b5ea7;
+            color: white;
+            border: none;
+            padding: 1em 2em;
+            font-size: 1.2em;
+            border-radius: 8px;
+            margin-top: 2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #5a3e85;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>梦境收集站</h1>
-        <p>匿名记录并分享你做过的梦，来自中国各地的梦境正在这里交汇。</p>
-        <form action="#" method="POST">
-            <label for="location">你所在的城市：</label>
-            <input type="text" id="location" name="location" required>
-
-            <label for="date">做梦日期：</label>
-            <input type="date" id="date" name="date" required>
-
-            <label for="dream">梦境内容：</label>
-            <textarea id="dream" name="dream" rows="6" required></textarea>
-
-            <button type="submit">提交梦境</button>
-        </form>
-    </div>
+    <h1>欢迎来到梦想收藏家</h1>
+    <p>记录你昨夜的奇幻旅程。</p>
+    <button onclick="window.location.href='submit.html'">记录梦境</button>
 </body>
 </html>
