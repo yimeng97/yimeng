@@ -1,41 +1,87 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>梦想收藏家</title>
-    <style>
-        body {
-            background: linear-gradient(to bottom right, #e6e0f8, #c9e4ff);
-            font-family: "Helvetica Neue", sans-serif;
-            text-align: center;
-            color: #3e3e5c;
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            margin-top: 2em;
-            color: #7b5ea7;
-        }
-        button {
-            background-color: #7b5ea7;
-            color: white;
-            border: none;
-            padding: 1em 2em;
-            font-size: 1.2em;
-            border-radius: 8px;
-            margin-top: 2em;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #5a3e85;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>梦境记录</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: linear-gradient(to bottom, #e9dcf5, #c3d6f2);
+      color: #2d2d2d;
+      padding: 2em;
+    }
+    h1 {
+      color: #5e4b8b;
+    }
+    button {
+      background-color: #5e4b8b;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+    }
+    form {
+      margin-top: 1em;
+      padding: 1em;
+      border: 1px solid #ccc;
+      background-color: #f8f3ff;
+    }
+    label {
+      display: block;
+      margin-top: 0.5em;
+    }
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 0.5em;
+      margin-top: 0.2em;
+    }
+  </style>
 </head>
 <body>
-    <h1>欢迎来到梦想收藏家</h1>
-    <p>记录你昨夜的奇幻旅程。</p>
-    <button onclick="window.location.href='submit.html'">记录梦境</button>
+  <h1>记录你的梦境</h1>
+  <button onclick="document.getElementById('dreamForm').style.display='block'">记录梦境</button>
+
+  <form id="dreamForm" style="display:none" onsubmit="submitDream(event)">
+    <label>标题：
+      <input type="text" id="title" required />
+    </label>
+    <label>梦境内容：
+      <textarea id="body" required></textarea>
+    </label>
+    <label>
+      <input type="checkbox" id="isPrivate" />
+      设为私密
+    </label>
+    <br/>
+    <button type="submit">提交</button>
+  </form>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://cdwgqqystntiqeptukjy.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNkd2dxcXlzdG50aXFlcHR1a2p5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcyNzg1MzYsImV4cCI6MjA2Mjg1NDUzNn0._Ca_2vK9AGtEl6R3qbwN29faSEYpgZIw9muEkUX7Bgo';
+
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function submitDream(event) {
+      event.preventDefault();
+      const title = document.getElementById('title').value;
+      const body = document.getElementById('body').value;
+      const is_private = document.getElementById('isPrivate').checked;
+
+      const { data, error } = await supabase.from('dreams').insert([
+        { title, body, is_private }
+      ]);
+
+      if (error) {
+        alert('提交失败：' + error.message);
+      } else {
+        alert('梦境已记录！');
+        document.getElementById('dreamForm').reset();
+        document.getElementById('dreamForm').style.display = 'none';
+      }
+    }
+  </script>
 </body>
 </html>
