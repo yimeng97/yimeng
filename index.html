@@ -40,6 +40,7 @@
       background-color: #2e5e82;
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.5/dist/supabase.umd.min.js"></script>
 </head>
 <body>
   <h1>记录你的梦</h1>
@@ -54,12 +55,12 @@
 
   <p id="msg"></p>
 
-  <script type="module">
-    const SUPABASE_URL = "https://cdwgqqystntiqeptukjy.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNkd2dxcXlzdG50aXFlcHR1a2p5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcyNzg1MzYsImV4cCI6MjA2Mjg1NDUzNn0._Ca_2vK9AGtEl6R3qbwN29faSEYpgZIw9muEkUX7Bgo";
+  <script>
+    const { createClient } = supabase;
+    const supabaseUrl = "https://cdwgqqystntiqeptukjy.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNkd2dxcXlzdG50aXFlcHR1a2p5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcyNzg1MzYsImV4cCI6MjA2Mjg1NDUzNn0._Ca_2vK9AGtEl6R3qbwN29faSEYpgZIw9muEkUX7Bgo";
 
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    const client = createClient(supabaseUrl, supabaseKey);
 
     async function submitDream() {
       const title = document.getElementById("title").value;
@@ -71,11 +72,9 @@
         return;
       }
 
-      const { data, error } = await supabase
-        .from("yimeng")
-        .insert([
-          { title, body, is_private }
-        ]);
+      const { data, error } = await client.from("yimeng").insert([
+        { title, body, is_private }
+      ]);
 
       if (error) {
         document.getElementById("msg").textContent = "提交失败：" + error.message;
