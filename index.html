@@ -6,80 +6,83 @@
   <title>梦境记录</title>
   <style>
     body {
+      background-color: #f4f0fa;
+      color: #333;
       font-family: sans-serif;
-      background: linear-gradient(to bottom, #e9dcf5, #c3d6f2);
-      color: #2d2d2d;
+      text-align: center;
       padding: 2em;
     }
+
     h1 {
       color: #5e4b8b;
     }
+
+    textarea, input[type="text"], select {
+      width: 90%;
+      max-width: 400px;
+      padding: 10px;
+      margin: 10px auto;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
     button {
-      background-color: #5e4b8b;
+      background-color: #3a7ca5;
       color: white;
       padding: 10px 20px;
       border: none;
+      border-radius: 5px;
       cursor: pointer;
     }
-    form {
-      margin-top: 1em;
-      padding: 1em;
-      border: 1px solid #ccc;
-      background-color: #f8f3ff;
-    }
-    label {
-      display: block;
-      margin-top: 0.5em;
-    }
-    textarea, input[type="text"] {
-      width: 100%;
-      padding: 0.5em;
-      margin-top: 0.2em;
+
+    button:hover {
+      background-color: #2e5e82;
     }
   </style>
 </head>
 <body>
-  <h1>记录你的梦境</h1>
-  <button onclick="document.getElementById('dreamForm').style.display='block'">记录梦境</button>
+  <h1>记录你的梦</h1>
 
-  <form id="dreamForm" style="display:none" onsubmit="submitDream(event)">
-    <label>标题：
-      <input type="text" id="title" required />
-    </label>
-    <label>梦境内容：
-      <textarea id="body" required></textarea>
-    </label>
-    <label>
-      <input type="checkbox" id="isPrivate" />
-      设为私密
-    </label>
-    <br/>
-    <button type="submit">提交</button>
-  </form>
+  <input type="text" id="title" placeholder="梦的标题（可选）"/>
+  <textarea id="body" rows="6" placeholder="写下你的梦..."></textarea>
+  <select id="privacy">
+    <option value="false">公开</option>
+    <option value="true">私密</option>
+  </select>
+  <button onclick="submitDream()">提交梦境</button>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = 'https://cdwgqqystntiqeptukjy.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNkd2dxcXlzdG50aXFlcHR1a2p5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcyNzg1MzYsImV4cCI6MjA2Mjg1NDUzNn0._Ca_2vK9AGtEl6R3qbwN29faSEYpgZIw9muEkUX7Bgo';
+  <p id="msg"></p>
 
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  <script type="module">
+    const SUPABASE_URL = "https://cdwgqqystntiqeptukjy.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNkd2dxcXlzdG50aXFlcHR1a2p5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcyNzg1MzYsImV4cCI6MjA2Mjg1NDUzNn0._Ca_2vK9AGtEl6R3qbwN29faSEYpgZIw9muEkUX7Bgo";
 
-    async function submitDream(event) {
-      event.preventDefault();
-      const title = document.getElementById('title').value;
-      const body = document.getElementById('body').value;
-      const is_private = document.getElementById('isPrivate').checked;
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-      const { data, error } = await supabase.from('dreams').insert([
-        { title, body, is_private }
-      ]);
+    async function submitDream() {
+      const title = document.getElementById("title").value;
+      const body = document.getElementById("body").value;
+      const is_private = document.getElementById("privacy").value === "true";
+
+      if (!body.trim()) {
+        document.getElementById("msg").textContent = "梦境内容不能为空";
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("yimeng")
+        .insert([
+          { title, body, is_private }
+        ]);
 
       if (error) {
-        alert('提交失败：' + error.message);
+        document.getElementById("msg").textContent = "提交失败：" + error.message;
       } else {
-        alert('梦境已记录！');
-        document.getElementById('dreamForm').reset();
-        document.getElementById('dreamForm').style.display = 'none';
+        document.getElementById("msg").textContent = "提交成功！";
+        document.getElementById("title").value = "";
+        document.getElementById("body").value = "";
       }
     }
   </script>
