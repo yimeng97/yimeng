@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>记录梦境</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #e6e0f8, #c9e4ff);
+            font-family: "Helvetica Neue", sans-serif;
+            color: #3e3e5c;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2em;
+        }
+        form {
+            background-color: white;
+            padding: 2em;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 1em;
+            margin: 1em 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+        }
+        button {
+            background-color: #7b5ea7;
+            color: white;
+            border: none;
+            padding: 1em 2em;
+            font-size: 1.1em;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #5a3e85;
+        }
+    </style>
+</head>
+<body>
+    <h2>记录你的梦境</h2>
+    <form id="dreamForm">
+        <input type="text" id="title" placeholder="梦境标题" required>
+        <textarea id="body" placeholder="梦的内容..." rows="6" required></textarea>
+        <select id="visibility">
+            <option value="公开">公开</option>
+            <option value="私密">私密</option>
+        </select>
+        <button type="submit">提交</button>
+    </form>
+
+    <script>
+        document.getElementById("dreamForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const title = document.getElementById("title").value;
+            const body = document.getElementById("body").value;
+            const visibility = document.getElementById("visibility").value;
+
+            const issueUrl = "https://github.com/yimeng97/yimeng/issues/new?" +
+                "title=" + encodeURIComponent("【" + visibility + "】" + title) +
+                "&body=" + encodeURIComponent(body);
+
+            window.open(issueUrl, "_blank");
+        });
+    </script>
+</body>
+</html>
