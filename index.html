@@ -6,83 +6,75 @@
   <title>梦境记录</title>
   <style>
     body {
-      background-color: #f4f0fa;
-      color: #333;
+      background-color: #f6f0ff;
       font-family: sans-serif;
+      padding: 20px;
+      color: #333;
       text-align: center;
-      padding: 2em;
     }
-
     h1 {
-      color: #5e4b8b;
+      color: #6a4c93;
     }
-
-    textarea, input[type="text"], select {
+    textarea, input, select, button {
+      display: block;
       width: 90%;
       max-width: 400px;
-      padding: 10px;
       margin: 10px auto;
-      display: block;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      padding: 10px;
+      font-size: 16px;
     }
-
     button {
-      background-color: #3a7ca5;
+      background-color: #355c7d;
       color: white;
-      padding: 10px 20px;
       border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      border-radius: 4px;
     }
-
-    button:hover {
-      background-color: #2e5e82;
+    #msg {
+      margin-top: 15px;
+      font-size: 15px;
+      color: #a34f2f;
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.5/dist/supabase.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.35.6/dist/supabase.min.js"></script>
 </head>
 <body>
   <h1>记录你的梦</h1>
-
-  <input type="text" id="title" placeholder="梦的标题（可选）"/>
-  <textarea id="body" rows="6" placeholder="写下你的梦..."></textarea>
+  <input id="title" placeholder="梦的标题（可选）" />
+  <textarea id="body" placeholder="写下你的梦..." rows="5"></textarea>
   <select id="privacy">
     <option value="false">公开</option>
     <option value="true">私密</option>
   </select>
   <button onclick="submitDream()">提交梦境</button>
-
-  <p id="msg"></p>
+  <div id="msg"> </div>
 
   <script>
-    const { createClient } = supabase;
-    const supabaseUrl = "https://cdwgqqystntiqeptukjy.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNkd2dxcXlzdG50aXFlcHR1a2p5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcyNzg1MzYsImV4cCI6MjA2Mjg1NDUzNn0._Ca_2vK9AGtEl6R3qbwN29faSEYpgZIw9muEkUX7Bgo";
+    var supabaseUrl = "https://cdwgqqystntiqeptukjy.supabase.co";
+    var supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNkd2dxcXlzdG50aXFlcHR1a2p5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcyNzg1MzYsImV4cCI6MjA2Mjg1NDUzNn0._Ca_2vK9AGtEl6R3qbwN29faSEYpgZIw9muEkUX7Bgo";
+    var client = supabase.createClient(supabaseUrl, supabaseKey);
 
-    const client = createClient(supabaseUrl, supabaseKey);
-
-    async function submitDream() {
-      const title = document.getElementById("title").value;
-      const body = document.getElementById("body").value;
-      const is_private = document.getElementById("privacy").value === "true";
+    function submitDream() {
+      var title = document.getElementById("title").value;
+      var body = document.getElementById("body").value;
+      var is_private = document.getElementById("privacy").value === "true";
 
       if (!body.trim()) {
-        document.getElementById("msg").textContent = "梦境内容不能为空";
+        document.getElementById("msg").innerText = "梦境内容不能为空";
         return;
       }
 
-      const { data, error } = await client.from("yimeng").insert([
-        { title, body, is_private }
-      ]);
-
-      if (error) {
-        document.getElementById("msg").textContent = "提交失败：" + error.message;
-      } else {
-        document.getElementById("msg").textContent = "提交成功！";
-        document.getElementById("title").value = "";
-        document.getElementById("body").value = "";
-      }
+      client
+        .from("yimeng")
+        .insert([{ title: title, body: body, is_private: is_private }])
+        .then(function (res) {
+          if (res.error) {
+            document.getElementById("msg").innerText = "提交失败：" + res.error.message;
+          } else {
+            document.getElementById("msg").innerText = "提交成功！";
+            document.getElementById("title").value = "";
+            document.getElementById("body").value = "";
+          }
+        });
     }
   </script>
 </body>
